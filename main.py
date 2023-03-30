@@ -1,13 +1,15 @@
 import speech_recognition as sr
 import pyttsx3 as pt3
+import search as sc
 
 # Initializing text to speech
 engine = pt3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
+engine.setProperty('rate', 150)
 
 
-def command():
+def main():
     listener = sr.Recognizer()  # speech_recognition module holder
     with sr.Microphone() as source:  # Getting the audio from microphone
         speak('Hi there! this is a test')  # First contact :)
@@ -20,11 +22,14 @@ def command():
         # Recognizing the voice
         try:
             print("Processing...")
-            service = listener.recognize_google(voice)
-            print(service)  # For now this is just for debugging
+            text_result = listener.recognize_google(voice)
         except:
             pass
-        # return service  # Returning the recognized voice
+
+        # Try searching and speaking
+        search(text_result)
+
+    # return text_result  # Returning the recognized voice
 
 
 # Function to speak
@@ -33,5 +38,11 @@ def speak(text):
     engine.runAndWait()
 
 
-if __name__ == "__main__":
-    command()
+def search(text):
+    print("Answering...")
+    search_result = sc.search(text)
+    speak(search_result)
+
+
+if __name__ == '__main__':
+    main()
