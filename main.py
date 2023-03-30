@@ -6,7 +6,7 @@ import search as sc
 engine = pt3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
-engine.setProperty('rate', 150)
+engine.setProperty('rate', 180)
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
         # TODO: Implement other features
 
         # TODO: Implement command separation and help
-        # And make if there is no leading keyword it will just repeat
+        # And make if there is no leading keyword it will show the keyword list
 
     # return text_result  # Returning the recognized voice
 
@@ -46,8 +46,9 @@ def speak(text):
 
 
 def google(text):
-    print("Answering...")
+    print("Searching...")
     search_result = sc.search(text)
+    print("Answering...")
     speak(search_result)
 
 

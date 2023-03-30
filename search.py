@@ -39,6 +39,7 @@ def search(text):
 
 
 if __name__ == '__main__':
+    # Example
     print(search('how many stars are there in milky way'))
     print(search('when is valentine'))
-    print(search('why is the earth has water'))
+    print(search('why does earth have water'))
