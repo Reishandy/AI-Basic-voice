@@ -10,24 +10,32 @@ engine.setProperty('rate', 150)
 
 
 def main():
-    listener = sr.Recognizer()  # speech_recognition module holder
-    with sr.Microphone() as source:  # Getting the audio from microphone
-        speak('Hi there! this is a test')  # First contact :)
+    speak('Hi there! this is a test, Please ask me anything.')  # First contact :)
 
+    # speech_recognition setup
+    listener = sr.Recognizer()
+    listener.pause_threshold = 0.7
+
+    with sr.Microphone() as source:  # Getting the audio from microphone
         # Listening from microphone
         print("Listening...")
-        listener.pause_threshold = 0.6
         voice = listener.listen(source)
 
         # Recognizing the voice
         try:
             print("Processing...")
             text_result = listener.recognize_google(voice)
-
-            # Try searching and speaking
-            search(text_result)
         except:
             print("Failed... Something is wrong")
+            return
+
+        # Try searching and speaking
+        google(text_result)
+
+        # TODO: Implement other features
+
+        # TODO: Implement command separation and help
+        # And make if there is no leading keyword it will just repeat
 
     # return text_result  # Returning the recognized voice
 
@@ -37,7 +45,7 @@ def speak(text):
     engine.runAndWait()
 
 
-def search(text):
+def google(text):
     print("Answering...")
     search_result = sc.search(text)
     speak(search_result)

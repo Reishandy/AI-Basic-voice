@@ -20,18 +20,18 @@ def search(text):
         result += ' ' + soup.find('span', class_='Z0LcW t2b5Cf').text
     except:
         pass
-    try:
-        result += ' ' + soup.find('span', class_='wHYlTd z8gr9e').text
-    except:
-        pass
-    try:
-        result += ' ' + soup.find('div', class_='VwiC3b yXK7lf MUxGbd yDYNvb lyLwlc lEBKkf').text
-    except:
-        pass
-    try:
-        result += ' ' + soup.find('div', class_='kno-rdesc').text
-    except:
-        pass
+
+    if result == '':
+        try:
+            result += ' ' + soup.find('div', class_='VwiC3b yXK7lf MUxGbd yDYNvb lyLwlc lEBKkf').text
+        except:
+            pass
+
+    if result == '':
+        try:
+            result += ' ' + soup.find('div', class_='kno-rdesc').text
+        except:
+            pass
 
     if result == '':
         return 'Unfortunately I cannot find the result'
@@ -39,4 +39,6 @@ def search(text):
 
 
 if __name__ == '__main__':
-    print(search('when is india independence'))
+    print(search('how many stars are there in milky way'))
+    print(search('when is valentine'))
+    print(search('why is the earth has water'))
