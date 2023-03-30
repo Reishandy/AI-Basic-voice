@@ -21,7 +21,7 @@ def command():
         try:
             print("Processing...")
             service = listener.recognize_google(voice)
-            print(service)
+            print(service)  # For now this is just for debugging
         except:
             pass
         # return service  # Returning the recognized voice
