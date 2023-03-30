@@ -23,11 +23,11 @@ def main():
         try:
             print("Processing...")
             text_result = listener.recognize_google(voice)
-        except:
-            pass
 
-        # Try searching and speaking
-        search(text_result)
+            # Try searching and speaking
+            search(text_result)
+        except:
+            print("Failed... Something is wrong")
 
     # return text_result  # Returning the recognized voice
 
