@@ -32,7 +32,6 @@ def main():
     # return text_result  # Returning the recognized voice
 
 
-# Function to speak
 def speak(text):
     engine.say(text)
     engine.runAndWait()
