@@ -17,9 +17,9 @@ def main():
     listener.pause_threshold = 0.7
 
     with sr.Microphone() as source:  # Getting the audio from microphone
-        # Listening from microphone
+        # Listening from microphone (converting audio data)
         print("Listening...")
-        voice = listener.listen(source)
+        voice = listener.listen(source, phrase_time_limit=5)
 
         # Recognizing the voice
         try:
@@ -29,13 +29,13 @@ def main():
             print("Failed... Something is wrong")
             return
 
-        # Try searching and speaking
-        google(text_result)
+    # Try searching and speaking
+    google(text_result)
 
-        # TODO: Implement other features
+    # TODO: Implement other features
 
-        # TODO: Implement command separation and help
-        # And make if there is no leading keyword it will show the keyword list
+    # TODO: Implement command separation and help
+    # And make if there is no leading keyword it will show the keyword list
 
     # return text_result  # Returning the recognized voice
 

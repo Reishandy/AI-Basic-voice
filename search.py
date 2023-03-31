@@ -23,7 +23,12 @@ def search(text):
 
     if result == '':
         try:
-            result += ' ' + soup.find('div', class_='VwiC3b yXK7lf MUxGbd yDYNvb lyLwlc lEBKkf').text
+            web_desc = soup.find('div', class_='VwiC3b yXK7lf MUxGbd yDYNvb lyLwlc lEBKkf').text
+            if '—' in web_desc:
+                web_desc = web_desc.split('—')[1]
+            if '...' in web_desc:
+                web_desc = web_desc.split('.')[0]
+            result += ' ' + web_desc
         except:
             pass
 
@@ -40,6 +45,8 @@ def search(text):
 
 if __name__ == '__main__':
     # Example
-    print(search('how many stars are there in milky way'))
-    print(search('when is valentine'))
-    print(search('why does earth have water'))
+    # print(search('how many stars are there in milky way'))
+    # print(search('when is valentine'))
+    # print(search('why does earth have water'))
+    # print(search('how many days are in march'))
+    print(search('when will ramadan end'))
