@@ -1,9 +1,11 @@
 from sys import exit
-import speech_recognition as sr
+
 import pyttsx3 as pt3
-from search import search
+import speech_recognition as sr
 from pywhatkit import playonyt
 from wikipedia import summary, exceptions
+
+from search import search
 
 # Initializing text to speech
 engine = pt3.init()
@@ -16,12 +18,23 @@ def main():
     # Getting command and split into key and content
     keyword, content = ('', '')  # Bad practice :(
     command = get_command()
+
+    # Exit condition check
+    if command == 'goodbye':
+        print('Exiting...')
+        speak('good bye, see you again')
+        exit(0)
+    if command == 'exit' or command == 'stop':
+        print('Exiting...')
+        exit(1)
+
     try:
         keyword, content = command.split(' ', 1)
     except ValueError:
         command_list()
     print(f'command: {keyword}, content: {content}')
 
+    # Do operation based on keyword
     match keyword.lower():
         case 'search':
             google(content)
@@ -34,7 +47,7 @@ def main():
 
 
 def get_command():
-    speak('Hi there! this is a test')  # First contact :)
+    speak('you can ask me something')
 
     # speech_recognition setup
     listener = sr.Recognizer()
@@ -50,8 +63,8 @@ def get_command():
             print('Processing...')
             text_result = listener.recognize_google(voice)
         except:
-            print('Failed... Something went wrong, exiting...')
-            exit(1)
+            print('Failed... Something went wrong')
+            speak('there was something wrong, can you repeat yourself?')
 
     return text_result
 
@@ -62,13 +75,13 @@ def speak(text):
 
 
 def command_list():
-    print('command list: Search, Wiki, Open (video, not good), ')
-    speak('please specify the command')
-    exit(2)
+    print('command list: Search, Wiki, Open (video, not good except music...), , goodbye (exit program), '
+          'exit / stop')
+    speak('I do not understand, please repeat.')
 
 
 def google(text):
-    print('Searching...')
+    print(f'Searching {text}...')
     search_result = search(text)
     print('Answering...')
     print(f'Google: {search_result}')
@@ -76,15 +89,17 @@ def google(text):
 
 
 def youtube(text):
-    speak(f'opening {text}')
+    speak(f'opening {text} on YouTube')
     print(f'"{text}" opening...')
     playonyt(text)
+    exit(2)
 
 
 def wikipedia(text):
-    print('Searching...')
+    wiki_result = text  # Bad practice
+    print(f'Searching {text}...')
     try:
-        wiki_result = summary(text, sentences=5, auto_suggest=True)
+        wiki_result = summary(text, sentences=4)
     except exceptions.DisambiguationError as exception:  # If not found
         print('Not found...')
         speak(f'I could not find {text}')
@@ -92,11 +107,15 @@ def wikipedia(text):
         # List suggestion
         print(exception)
         speak(exception)
-        exit(3)
+    except exceptions.PageError:
+        print('Not found...')
+        speak('I am unable to find the page.')
 
     print(f'Wikipedia: {wiki_result}')
     speak(wiki_result)
 
 
 if __name__ == '__main__':
-    main()
+    speak('Hi there! I am an AI?. this is a test')  # First contact :)
+    while True:
+        main()
