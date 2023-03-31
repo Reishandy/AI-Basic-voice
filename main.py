@@ -1,6 +1,9 @@
+from sys import exit
 import speech_recognition as sr
 import pyttsx3 as pt3
-import search as sc
+from search import search
+from pywhatkit import playonyt
+from wikipedia import summary, exceptions
 
 # Initializing text to speech
 engine = pt3.init()
@@ -10,7 +13,28 @@ engine.setProperty('rate', 180)
 
 
 def main():
-    speak('Hi there! this is a test, Please ask me anything.')  # First contact :)
+    # Getting command and split into key and content
+    keyword, content = ('', '')  # Bad practice :(
+    command = get_command()
+    try:
+        keyword, content = command.split(' ', 1)
+    except ValueError:
+        command_list()
+    print(f'command: {keyword}, content: {content}')
+
+    match keyword.lower():
+        case 'search':
+            google(content)
+        case 'open':
+            youtube(content)
+        case 'wiki':
+            wikipedia(content)
+        case _:
+            command_list()
+
+
+def get_command():
+    speak('Hi there! this is a test')  # First contact :)
 
     # speech_recognition setup
     listener = sr.Recognizer()
@@ -18,26 +42,18 @@ def main():
 
     with sr.Microphone() as source:  # Getting the audio from microphone
         # Listening from microphone (converting audio data)
-        print("Listening...")
+        print('Listening...')
         voice = listener.listen(source, phrase_time_limit=5)
 
         # Recognizing the voice
         try:
-            print("Processing...")
+            print('Processing...')
             text_result = listener.recognize_google(voice)
         except:
-            print("Failed... Something is wrong")
-            return
+            print('Failed... Something went wrong, exiting...')
+            exit(1)
 
-    # Try searching and speaking
-    google(text_result)
-
-    # TODO: Implement other features
-
-    # TODO: Implement command separation and help
-    # And make if there is no leading keyword it will show the keyword list
-
-    # return text_result  # Returning the recognized voice
+    return text_result
 
 
 def speak(text):
@@ -45,11 +61,41 @@ def speak(text):
     engine.runAndWait()
 
 
+def command_list():
+    print('command list: Search, Wiki, Open (video, not good), ')
+    speak('please specify the command')
+    exit(2)
+
+
 def google(text):
-    print("Searching...")
-    search_result = sc.search(text)
-    print("Answering...")
+    print('Searching...')
+    search_result = search(text)
+    print('Answering...')
+    print(f'Google: {search_result}')
     speak(search_result)
+
+
+def youtube(text):
+    speak(f'opening {text}')
+    print(f'"{text}" opening...')
+    playonyt(text)
+
+
+def wikipedia(text):
+    print('Searching...')
+    try:
+        wiki_result = summary(text, sentences=5, auto_suggest=True)
+    except exceptions.DisambiguationError as exception:  # If not found
+        print('Not found...')
+        speak(f'I could not find {text}')
+
+        # List suggestion
+        print(exception)
+        speak(exception)
+        exit(3)
+
+    print(f'Wikipedia: {wiki_result}')
+    speak(wiki_result)
 
 
 if __name__ == '__main__':

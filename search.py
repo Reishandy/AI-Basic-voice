@@ -11,6 +11,12 @@ def search(text):
     soup = BeautifulSoup(requests.get(url, headers=headers).content, 'html.parser')
     result = ''
 
+    if ' ' not in text:
+        try:
+            result += ' ' + soup.find('div', class_='kno-rdesc').text
+        except:
+            pass
+
     # Try to get result
     try:
         result += ' ' + soup.find('span', class_='hgKElc').text
@@ -33,20 +39,16 @@ def search(text):
             pass
 
     if result == '':
-        try:
-            result += ' ' + soup.find('div', class_='kno-rdesc').text
-        except:
-            pass
-
-    if result == '':
         return 'Unfortunately I cannot find the result'
     return result
 
 
 if __name__ == '__main__':
+    print('module test...')
     # Example
     # print(search('how many stars are there in milky way'))
     # print(search('when is valentine'))
     # print(search('why does earth have water'))
     # print(search('how many days are in march'))
-    print(search('when will ramadan end'))
+    # print(search('when will ramadan end'))
+    print(search('youtube'))
