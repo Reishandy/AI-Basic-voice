@@ -1,17 +1,13 @@
 from sys import exit
+from os import path
 
-import pyttsx3 as pt3
 import speech_recognition as sr
 from pywhatkit import playonyt
-from wikipedia import summary, exceptions
+from wikipedia import summary, exceptions, set_lang
+from gtts import gTTS
+from playsound import playsound
 
 from search import search
-
-# Initializing text to speech
-engine = pt3.init()
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
-engine.setProperty('rate', 180)
 
 
 def main():
@@ -20,12 +16,12 @@ def main():
     command = get_command()
 
     # Exit condition check
-    if command == 'goodbye':
-        print('Exiting...')
-        speak('good bye, see you again')
+    if command == 'selamat tinggal':
+        print('Keluar...')
+        speak('Sampai jumpa')
         exit(0)
-    if command == 'exit' or command == 'stop':
-        print('Exiting...')
+    if command == 'keluar' or command == 'stop':
+        print('Keluar...')
         exit(1)
 
     try:
@@ -36,9 +32,9 @@ def main():
 
     # Do operation based on keyword
     match keyword.lower():
-        case 'search':
+        case 'cari':
             google(content)
-        case 'open':
+        case 'buka':
             youtube(content)
         case 'wiki':
             wikipedia(content)
@@ -47,7 +43,7 @@ def main():
 
 
 def get_command():
-    speak('you can ask me something')
+    speak('katakan sesuatu')
 
     # speech_recognition setup
     listener = sr.Recognizer()
@@ -55,67 +51,70 @@ def get_command():
 
     with sr.Microphone() as source:  # Getting the audio from microphone
         # Listening from microphone (converting audio data)
-        print('Listening...')
+        print('Mendengarkan...')
         voice = listener.listen(source, phrase_time_limit=5)
 
         # Recognizing the voice
         try:
-            print('Processing...')
-            text_result = listener.recognize_google(voice)
+            print('Memproses...')
+            text_result = listener.recognize_google(voice, language='id-ID')
         except:
-            print('Failed... Something went wrong')
-            speak('there was something wrong, can you repeat yourself?')
+            print('Gagal... Ada sesuatu yang salah')
+            speak('ada masalah, bisakah anda mengulang?')
 
     return text_result
 
 
-def speak(text):
-    engine.say(text)
-    engine.runAndWait()
-
-
 def command_list():
-    print('command list: Search, Wiki, Open (video, not good except music...), , goodbye (exit program), '
-          'exit / stop')
-    speak('I do not understand, please repeat.')
+    print('Perintah: Cari, Wiki, Buka (video, not good except music...), selamat tinggal (keluar program), '
+          'keluar / stop')
+    speak('Saya tidak mengerti, mohon diulangi.')
 
 
 def google(text):
-    print(f'Searching {text}...')
+    print(f'Mencari {text}...')
     search_result = search(text)
-    print('Answering...')
+    print('Menjawab...')
     print(f'Google: {search_result}')
     speak(search_result)
 
 
 def youtube(text):
-    speak(f'opening {text} on YouTube')
-    print(f'"{text}" opening...')
+    speak(f'membuka {text} di YouTube')
+    print(f'"{text}" sedang dibuka...')
     playonyt(text)
     exit(2)
 
 
 def wikipedia(text):
+    set_lang('id')
     wiki_result = text  # Bad practice
-    print(f'Searching {text}...')
+    print(f'Mencari {text}...')
     try:
         wiki_result = summary(text, sentences=4)
     except exceptions.DisambiguationError as exception:  # If not found
-        print('Not found...')
-        speak(f'I could not find {text}')
+        print('Tidak ditemukan...')
+        speak(f'Saya tidak bisa menemukan {text}')
 
         # List suggestion
+        speak('apakah yang dimaksud')
         print(exception)
         speak(exception)
     except exceptions.PageError:
-        print('Not found...')
-        speak('I am unable to find the page.')
+        print('Tidak ditemukan...')
+        speak(f'Saya tidak bisa menemukan {text}')
 
     print(f'Wikipedia: {wiki_result}')
     speak(wiki_result)
 
 
+def speak(text):
+    speaking = gTTS(text, lang='id')
+    speaking.save('voice.mp3')
+    playsound(path.dirname(__file__) + '\\voice.mp3')
+
+
 if __name__ == '__main__':
-    speak('Hi there! I am an AI?')  # First contact :)
+    speak('Halo, saya adalah AI')  # First contact :)
     while True:
         main()

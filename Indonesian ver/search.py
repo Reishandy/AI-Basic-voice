@@ -7,7 +7,7 @@ def search(text):
     headers = {
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'
     }
-    url = 'https://www.google.com/search?lr=lang_en&q=' + text.replace(" ", "+")
+    url = 'https://www.google.com/search?lr=lang_id&q=' + text.replace(" ", "+")
     soup = BeautifulSoup(requests.get(url, headers=headers).content, 'html.parser')
     result = ''
 
