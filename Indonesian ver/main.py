@@ -1,11 +1,11 @@
-from sys import exit
 from os import path
+from sys import exit
 
 import speech_recognition as sr
-from pywhatkit import playonyt
-from wikipedia import summary, exceptions, set_lang
 from gtts import gTTS
 from playsound import playsound
+from pywhatkit import playonyt
+from wikipedia import summary, exceptions, set_lang
 
 from search import search
 
