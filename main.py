@@ -11,7 +11,7 @@ from search import search
 engine = pt3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
-engine.setProperty('rate', 180)
+engine.setProperty('rate', 160)
 
 
 def main():
@@ -32,6 +32,7 @@ def main():
         keyword, content = command.split(' ', 1)
     except ValueError:
         command_list()
+        return
     print(f'command: {keyword}, content: {content}')
 
     # Do operation based on keyword
@@ -59,14 +60,16 @@ def get_command():
         voice = listener.listen(source, phrase_time_limit=5)
 
         # Recognizing the voice
+        print('Processing...')
         try:
-            print('Processing...')
             text_result = listener.recognize_google(voice)
-        except:
+        except sr.exceptions.UnknownValueError:
             print('Failed... Something went wrong')
-            speak('there was something wrong, can you repeat yourself?')
 
-    return text_result
+    try:
+        return text_result
+    except UnboundLocalError:
+        return ''
 
 
 def speak(text):

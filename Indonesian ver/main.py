@@ -28,6 +28,7 @@ def main():
         keyword, content = command.split(' ', 1)
     except ValueError:
         command_list()
+        return
     print(f'command: {keyword}, content: {content}')
 
     # Do operation based on keyword
@@ -47,7 +48,7 @@ def get_command():
 
     # speech_recognition setup
     listener = sr.Recognizer()
-    listener.pause_threshold = 0.7
+    listener.pause_threshold = 0.9
 
     with sr.Microphone() as source:  # Getting the audio from microphone
         # Listening from microphone (converting audio data)
@@ -58,11 +59,13 @@ def get_command():
         try:
             print('Memproses...')
             text_result = listener.recognize_google(voice, language='id-ID')
-        except:
+        except sr.exceptions.UnknownValueError:
             print('Gagal... Ada sesuatu yang salah')
-            speak('ada masalah, bisakah anda mengulang?')
 
-    return text_result
+    try:
+        return text_result
+    except UnboundLocalError:
+        return ''
 
 
 def command_list():
