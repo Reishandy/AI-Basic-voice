@@ -5,13 +5,13 @@ import speech_recognition as sr
 from pywhatkit import playonyt
 from wikipedia import summary, exceptions
 
-from search import search
+from search import search, speed
 
 # Initializing text to speech
 engine = pt3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
-engine.setProperty('rate', 160)
+engine.setProperty('rate', 150)
 
 
 def main():
@@ -27,6 +27,12 @@ def main():
     if command == 'exit' or command == 'stop':
         print('Exiting...')
         exit(1)
+
+    # Check without content
+    if 'check' in command:
+        if 'internet' in command or 'speed' in command:
+            speed_test()
+            return
 
     try:
         keyword, content = command.split(' ', 1)
@@ -116,6 +122,16 @@ def wikipedia(text):
 
     print(f'Wikipedia: {wiki_result}')
     speak(wiki_result)
+
+
+def speed_test():
+    print('Checking...')
+    print('This may take a while')
+    speak('checking your internet speed, please wait patiently')
+    down, up = speed()
+    print(f'download: {down:.2f}MB, upload {up:.2f}MB')
+    speak(f'your download speed is {down:.2f}Mega Bytes and'
+          f'your upload speed is {up:.2f}Mega Bytes')
 
 
 if __name__ == '__main__':

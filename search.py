@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import speedtest
 
 
 def search(text):
@@ -43,6 +44,12 @@ def search(text):
     return result
 
 
+def speed():
+    d_speed = speedtest.Speedtest().download()/8000000  # Devide so that it will return the speed in MB
+    up_speed = speedtest.Speedtest().upload()/8000000
+    return d_speed, up_speed
+
+
 if __name__ == '__main__':
     print('module test...')
     # Example
@@ -51,4 +58,5 @@ if __name__ == '__main__':
     # print(search('why does earth have water'))
     # print(search('how many days are in march'))
     # print(search('when will ramadan end'))
-    print(search('youtube'))
+    # print(search('youtube'))
+    print(speed())
