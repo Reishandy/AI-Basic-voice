@@ -2,6 +2,7 @@ from sys import exit
 
 import pyttsx3 as pt3
 import speech_recognition as sr
+import rps
 from pywhatkit import playonyt
 from wikipedia import summary, exceptions
 
@@ -17,7 +18,7 @@ engine.setProperty('rate', 150)
 def main():
     # Getting command and split into key and content
     keyword, content = ('', '')  # Bad practice :(
-    command = get_command()
+    command = get_command().lower()
 
     # Exit condition check
     if command == 'goodbye':
@@ -49,13 +50,16 @@ def main():
             youtube(content)
         case 'wiki':
             wikipedia(content)
+        case 'play':
+            if content == 'rock paper scissors':
+                rps.play()
+            else:
+                print('Rock Paper Scissors')
         case _:
             command_list()
 
 
 def get_command():
-    speak('you can ask me something')
-
     # speech_recognition setup
     listener = sr.Recognizer()
     listener.pause_threshold = 0.7
@@ -84,8 +88,8 @@ def speak(text):
 
 
 def command_list():
-    print('command list: Search, Wiki, Open (video, not good except music...), , goodbye (exit program), '
-          'exit / stop')
+    print('command list: Search, Wiki, Open (video, not good except music...), check internet speed, play: rps'
+          ', goodbye (exit program), exit / stop')
     speak('I do not understand, please repeat.')
 
 
@@ -135,6 +139,6 @@ def speed_test():
 
 
 if __name__ == '__main__':
-    speak('Hi there! I am an AI?')  # First contact :)
+    speak('Hi there! I am an AI? ask me something')  # First contact :)
     while True:
         main()
