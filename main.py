@@ -2,10 +2,11 @@ from sys import exit
 
 import pyttsx3 as pt3
 import speech_recognition as sr
-import rps
 from pywhatkit import playonyt
+from datetime import datetime
 from wikipedia import summary, exceptions
 
+import rps
 from search import search, speed
 
 # Initializing text to speech
@@ -17,7 +18,6 @@ engine.setProperty('rate', 150)
 
 def main():
     # Getting command and split into key and content
-    keyword, content = ('', '')  # Bad practice :(
     command = get_command().lower()
 
     # Exit condition check
@@ -55,6 +55,18 @@ def main():
                 rps.play()
             else:
                 print('Rock Paper Scissors')
+        case 'what':
+            date = 'I do not know'
+            if 'time' in content:
+                date = get_date_or_time(use_time=True)
+            if 'date' in content:
+                date = get_date_or_time(use_date=True)
+            if 'day' in content:
+                date = get_date_or_time(use_day=True)
+            if 'date' in content and 'day' in content:
+                date = get_date_or_time()
+            print(date)
+            speak(f'It is {date}')
         case _:
             command_list()
 
@@ -73,6 +85,7 @@ def get_command():
         print('Processing...')
         try:
             text_result = listener.recognize_google(voice)
+            print(f'> {text_result}')
         except sr.exceptions.UnknownValueError:
             print('Failed... Something went wrong')
 
@@ -89,7 +102,7 @@ def speak(text):
 
 def command_list():
     print('command list: Search, Wiki, Open (video, not good except music...), check internet speed, play: rps'
-          ', goodbye (exit program), exit / stop')
+          ', ask for day time and date, goodbye (exit program), exit / stop')
     speak('I do not understand, please repeat.')
 
 
@@ -136,6 +149,18 @@ def speed_test():
     print(f'download: {down:.2f}MB, upload {up:.2f}MB')
     speak(f'your download speed is {down:.2f}Mega Bytes and'
           f'your upload speed is {up:.2f}Mega Bytes')
+
+
+def get_date_or_time(use_date=False, use_time=False, use_day=False):
+    date = datetime.now()
+    if use_date:
+        return date.strftime('%d %B %Y')
+    elif use_time:
+        return date.strftime('%H %M')
+    elif use_day:
+        return date.strftime('%A')
+    else:
+        return date.strftime('%H %M %A %d %B %Y')
 
 
 if __name__ == '__main__':

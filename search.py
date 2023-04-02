@@ -59,4 +59,4 @@ if __name__ == '__main__':
     # print(search('how many days are in march'))
     # print(search('when will ramadan end'))
     # print(search('youtube'))
-    print(speed())
+    print(search('action anime recommendation latest'))
