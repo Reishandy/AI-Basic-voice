@@ -1,19 +1,12 @@
+from datetime import datetime
 from sys import exit
 
-import pyttsx3 as pt3
-import speech_recognition as sr
 from pywhatkit import playonyt
-from datetime import datetime
 from wikipedia import summary, exceptions
 
 import rps
 from search import search, speed
-
-# Initializing text to speech
-engine = pt3.init()
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
-engine.setProperty('rate', 150)
+from voice import get_command, speak
 
 
 def main():
@@ -69,35 +62,6 @@ def main():
             speak(f'It is {date}')
         case _:
             command_list()
-
-
-def get_command():
-    # speech_recognition setup
-    listener = sr.Recognizer()
-    listener.pause_threshold = 0.7
-
-    with sr.Microphone() as source:  # Getting the audio from microphone
-        # Listening from microphone (converting audio data)
-        print('Listening...')
-        voice = listener.listen(source, phrase_time_limit=5)
-
-        # Recognizing the voice
-        print('Processing...')
-        try:
-            text_result = listener.recognize_google(voice)
-            print(f'> {text_result}')
-        except sr.exceptions.UnknownValueError:
-            print('Failed... Something went wrong')
-
-    try:
-        return text_result
-    except UnboundLocalError:
-        return ''
-
-
-def speak(text):
-    engine.say(text)
-    engine.runAndWait()
 
 
 def command_list():
@@ -164,6 +128,6 @@ def get_date_or_time(use_date=False, use_time=False, use_day=False):
 
 
 if __name__ == '__main__':
-    speak('Hi there! I am an AI? ask me something')  # First contact :)
+    speak('Hi there! I am an AI. ask me something')  # First contact :)
     while True:
         main()
